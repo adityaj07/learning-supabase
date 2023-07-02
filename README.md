@@ -1,1 +1,1 @@
-### A simple app to for learning supabase
+### A simple app for learning supabase
