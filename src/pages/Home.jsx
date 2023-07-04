@@ -5,11 +5,12 @@ import SmoothieCard from "../components/SmoothieCard";
 const Home = () => {
   const [fetchError, setFetchError] = useState(null);
   const [smoothies, setSmoothies] = useState(null);
+  const [orderBy, setOrderBy] = useState("created_at");
 
   const handleDelete = async (id) => {
     try {
       await supabase.from("smoothies").delete().eq("id", id);
-      setSmoothies(prev => prev.filter(smoothie => smoothie.id !== id));
+      setSmoothies((prev) => prev.filter((smoothie) => smoothie.id !== id));
     } catch (error) {
       console.error("Error deleting smoothie:", error);
     }
@@ -18,7 +19,10 @@ const Home = () => {
   useEffect(() => {
     const fetchSmoothies = async () => {
       try {
-        const { data, error } = await supabase.from("smoothies").select();
+        const { data, error } = await supabase
+          .from("smoothies")
+          .select()
+          .order(orderBy, { ascending: false });
 
         if (error) {
           setFetchError("Could not fetch smoothies.");
@@ -34,7 +38,7 @@ const Home = () => {
     };
 
     fetchSmoothies();
-  }, []);
+  }, [orderBy]);
 
   return (
     <div>
@@ -48,6 +52,39 @@ const Home = () => {
       )}
       {smoothies && (
         <div className="w-[80%] mx-auto m-4">
+          <div className="mb-12 ">
+            <p
+              className="font-medium mb-3
+              "
+            >
+              Order by:
+            </p>
+            <div className="flex gap-4 text-white">
+              <button
+                onClick={() => {
+                  setOrderBy("created_at");
+                }}
+                type="button"
+                className="outline-none px-4 py-2 bg-red-500 text-white rounded w-fit"
+              >
+                Time created
+              </button>
+              <button
+                onClick={() => setOrderBy("title")}
+                type="button"
+                className="outline-none px-4 py-2 bg-red-500 text-white rounded w-fit"
+              >
+                Title
+              </button>
+              <button
+                onClick={() => setOrderBy("rating")}
+                type="button"
+                className="outline-none px-4 py-2 bg-red-500 text-white rounded w-fit"
+              >
+                Rating
+              </button>
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {smoothies.map((smoothie) => (
               <SmoothieCard
