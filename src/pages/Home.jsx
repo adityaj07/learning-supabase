@@ -2,6 +2,7 @@ import React from "react";
 import supabase from "../config/supabaseClient";
 import { useState, useEffect } from "react";
 import SmoothieCard from "../components/SmoothieCard";
+import { ToastContainer, toast } from 'react-toastify';
 
 const Home = () => {
   const [fetchError, setFetchError] = useState(null);

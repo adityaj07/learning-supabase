@@ -1,10 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import supabase from "../config/supabaseClient.js"
+import { useNavigate } from "react-router-dom";
+import supabase from "../config/supabaseClient.js";
 
 import Button from "../components/Button";
 
 const Create = () => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [method, setMethod] = useState("");
   const [rating, setRating] = useState("");
@@ -16,24 +19,26 @@ const Create = () => {
     if (!title || !method || !rating) {
       setFormError("Please fill in all the fields correctly");
       return;
-    } else{
-      setFormError(null)
+    } else {
+      setFormError(null);
     }
 
-    const {data, error} = await supabase.from("smoothies").insert([{title, method, rating}])
+    const { data, error } = await supabase
+      .from("smoothies")
+      .insert([{ title, method, rating }]);
 
-    if(error){
-      setFormError("Something went wrong!!")
+    if (error) {
+      setFormError("Something went wrong!!");
     }
 
-    if(data){
-      setFormError(null)
+    if (data) {
+      setFormError(null);
+      navigate("/");
     }
-
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-4 rounded-lg bg-red-400 mt-8 w-[35rem] mx-auto p-6 h-[30rem] text-white border border-red-500">
+    <form onSubmit={handleSubmit} className="ml-6 mr-6">
+      <div className="flex flex-col gap-4 rounded-lg bg-red-400 mt-8 mx-auto md:w-[35rem] md:mx-auto p-6 h-[30rem] text-white border border-red-500">
         <h1 className="text-2xl font-medium ">Create a smoothie</h1>
         <div className="flex flex-col  my-3">
           <label htmlFor="title text-sm">Name</label>
